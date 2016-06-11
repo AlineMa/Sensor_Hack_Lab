@@ -1,0 +1,34 @@
+int sensorPin = A0;
+int sensorPin1 = A1;
+int speakerPin = 8;
+int speakerPin1 = 10; // connect another speaker to pin 10
+int sensorValue = 0;
+int sensorValue1 = 0;
+
+void setup() {
+  // put your setup code here, to run once:
+  pinMode (speakerPin, OUTPUT);
+  pinMode (speakerPin1, OUTPUT);     // the 2nd speaker is also defined as output
+  Serial.begin (9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  // sensorValue = analogRead(sensorPin); //when I want to read only the sensor's value without map
+
+
+  sensorValue = map (analogRead(A0), 0, 1023, 50, 1023);
+  sensorValue1 = map (analogRead(A1), 0, 1023, 50, 1000);
+
+ //Serial.print(analogRead(A0));
+  //Serial.print(" ");
+ // Serial.println(analogRead(A1));
+ // delay(100);
+
+ tone (speakerPin, sensorValue, 100);      // play tone based on the 1st sensor input
+ delay(100); 
+ tone (speakerPin1, sensorValue1, 100);    // play tone based on the 2nd sensor input
+ delay(100);                // you can also try here a bit longer/shorter delay and see what happens
+                    // I have the feeling that with very short or no delay there comes strange sounds out
+}
