@@ -1,0 +1,48 @@
+int speakerPin = 13;
+int sensorValue = 0; // variable to store the value coming from the sensor
+
+void setup() {
+  // initialize serial communications at 9600 bps:
+  //serial.begin (9600);
+
+  //declare the ledPin as an OUTPUT;
+  pinMode (speakerPin, OUTPUT);
+  
+}
+
+void loop() {
+
+  sensorValue = 0;
+
+
+ for (int i = 0; i < 5 ; i++) {
+
+sensorValue += analogRead(A0);
+
+}
+  
+ sensorValue = sensorValue/5; 
+
+
+
+if (sensorValue >= 200 && sensorValue <= 500)
+{
+ tone(speakerPin, sensorValue);
+}
+else
+{
+  noTone (speakerPin);
+}
+
+ 
+  //print the results to the serial monitor;
+  // Serial.println (sensorValue);
+  // dalay(10); 
+
+  //sensorValue = map(analogRead(A0), 0,1023, 300, 900);
+
+  //Play tone
+//  tone(speakerPin, sensorValeu);
+  //delay(10);
+
+}
