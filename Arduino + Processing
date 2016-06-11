@@ -1,0 +1,176 @@
+//In Arduino
+
+int sensorPin0 = A0;
+int sensorPin1 = A1;
+int sensorValue0 = 0;
+int sensorValue1 = 1;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  sensorValue0 = map (analogRead(sensorPin0), 0, 1023, 50, 1023);
+
+  sensorValue1 = map (analogRead(sensorPin1), 0, 1023, 50, 1023);
+
+  Serial.print(sensorValue0, DEC);
+  Serial.print(",");
+  Serial.print(sensorValue1, DEC);
+  Serial.println();
+  delay (10);
+  
+}
+
+
+//__________________________
+//In processing
+
+
+import processing.serial.*;
+
+
+Serial myPort;
+float sensorValue0 = 0 ;
+float sensorValue1 = 0 ;
+
+int xPos0 = 1;
+int yPos0 = 10;
+int xPos1 = 20;
+int yPos1 = 300;
+
+void setup()
+{
+//size (400,400);
+fullScreen();
+
+//smooth();
+//noStroke();
+String portName = Serial.list()[2]; //change the 0 to a 1 or 2 etc. to match your port, Rachel used value 1 and worked
+myPort = new Serial(this, portName, 19200); 
+myPort.bufferUntil('\n');
+background (255,  255 , 255 );
+
+}
+
+void draw()
+{ 
+    if  ( sensorValue0 >= 100) { 
+     stroke(#df87ff);
+     strokeWeight(10); 
+     
+    // line(2 * xPos0, 5* yPos0, xPos0++ , height + sensorValue0); 
+    }    
+  
+  else if ( sensorValue0 >= 50) { 
+    
+     stroke(252,0,152, 180);
+     strokeWeight(10); 
+    line (5*xPos0, yPos0, xPos1, height + sensorValue0);
+     
+    
+     //line(xPos0, yPos0, xPos0++ , yPos0++);
+     // background(255,  255 , 255);
+    
+    }
+    
+   
+     
+   if (sensorValue1 >= 250) {
+     
+     line (xPos1, yPos1, height, height + sensorValue1);
+     stroke(#af00df);
+     strokeWeight(10); 
+    // background(255);
+    // line(xPos1, yPos1, xPos1++ , yPos1++);
+     
+     }  
+     
+    
+    
+    else { 
+      // background(255);
+      
+    stroke(252,0,152, 180);
+    strokeWeight(10); 
+    line (5*xPos0, yPos0, height + sensorValue1, height + sensorValue0);
+     
+     stroke(#5dffaf);
+     strokeWeight(10);
+     line(xPos0, yPos0, height, height + sensorValue0);
+      
+     stroke(#5fffaf);
+     strokeWeight(10); 
+     line(xPos1, yPos1, width, yPos1 - sensorValue1);
+     
+     stroke(#dfff87);
+     strokeWeight(10); 
+     line(xPos1, yPos1, width, yPos1 - sensorValue1);
+     
+     stroke(#dfff87);
+     strokeWeight(10); 
+     //line(10 * xPos0, 5* yPos0, height , height + sensorValue0); 
+    line(xPos1, 5* yPos0, height + sensorValue1 ,3 * height + sensorValue0);  
+     
+     stroke(#df87ff);
+     strokeWeight(10); 
+     line(2 * xPos0, 5* yPos0, 3*height , height - sensorValue0); 
+     
+     stroke(#df87ff);
+     strokeWeight(10); 
+     line ( 2 * xPos0, 5* yPos0, xPos0 + sensorValue1 , height - sensorValue0); 
+     
+     stroke(#af00df);
+     strokeWeight(10);
+     line (50* xPos1, yPos1, - height, - height + sensorValue1);
+     
+     stroke(#af00df);
+     strokeWeight(10);
+     line (2 * xPos0, yPos1, - height, width + sensorValue1);
+     
+   
+    // background(255);
+    // line(xPos1, yPos1, xPos1++ , yPos1++);
+     
+     }
+   }
+   
+   
+    
+
+
+ void serialEvent (Serial myPort) {
+  // get the ASCII string:
+  String inString = myPort.readStringUntil('\n');
+
+  if (inString != null) {
+    // trim off any whitespace:
+    inString = trim(inString);
+    // convert to an int and map to the screen height:
+    
+     // split the string on the commas and convert the
+    // resulting substrings into an integer array:
+  int[] sensors = int(split(inString, " "));
+ //  if the array has at least two elements, you know
+    // you got the whole thing.  Put the numbers in the
+    // sensor variables:
+ if (sensors.length >= 2) {
+   sensorValue0 = sensors[0];
+   sensorValue1 = sensors[1];
+    }
+      
+    sensorValue0 = float(inString);
+    sensorValue1 = float(inString);
+    print("0: ");
+   println(sensorValue0);
+   // sensorValue0 = map( sensorValue0, 0, 1023, 0, width);
+   print("1: ");
+   println( sensorValue1);
+   //sensorValue1 = map( sensorValue1, 0, 1023, 0, height);
+     
+    
+    }
+
+ }
